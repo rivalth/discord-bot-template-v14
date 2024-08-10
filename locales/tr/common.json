@@ -1,0 +1,10 @@
+{
+    "__LANG__": "tr",
+    "errors": {
+        "generic_command_execution_failed": "Bu komutu yürütürken bir hata oluştu! =(",
+        "command_not_found": "'%s' komutunu bilmiyor gibi görünüyorum :/"
+    },
+    "replies": {
+        "bot_info_tagline": "Rivalth tarafından hazırlanmış Discord Bot şablonu."
+    }
+}

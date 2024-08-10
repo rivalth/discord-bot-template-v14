@@ -1,0 +1,24 @@
+{
+  "name": "discord-bot-template-v14",
+  "version": "1.0.0",
+  "description": "Discord Bot Template by Rivalth",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rivalth/discord-bot-template-v14.git"
+  },
+  "keywords": [
+    "discordjs",
+    "template",
+    "javascript"
+  ],
+  "author": "Rivalth",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rivalth/discord-bot-template-v14/issues"
+  },
+  "homepage": "https://github.com/rivalth/discord-bot-template-v14#readme"
+}

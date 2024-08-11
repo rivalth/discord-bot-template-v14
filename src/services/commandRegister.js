@@ -17,8 +17,7 @@ const commandRegister = async function(client){
             const filePath = path.join(commandsPath, file);
             const prefix = os.platform() === "win32" ? "file://" : "";
             const command = (await import(prefix + filePath)).default;
-
-            if ("data" in command && "execute" in command){
+            if (command.data && command.execute){
                 client.commands.set(command.data.name, command);
             }
             else {
@@ -36,7 +35,7 @@ const commandRegister = async function(client){
         const data = await rest.put(Routes.applicationCommands(client.user?.id || ""), {
             body: cmdMap,
         });
-        Log.done("Successfully reloaded " + /** @type {Array} */ (data).length + " application (/) commands.");
+        Log.done("Successfully reloaded " + data.length + " application (/) commands.", true);
     }
     catch (error){
         Log.error("Error during registering of application (/) commands: " + error);

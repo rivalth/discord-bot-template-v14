@@ -5,6 +5,8 @@
         "command_not_found": "I don't seem to know the command '%s' :/"
     },
     "replies": {
-        "bot_info_tagline": "Discord Bot template by Rivalth."
+        "info": {
+            "tagLine": "Discord Bot template by Rivalth."
+        }
     }
 }

@@ -25,8 +25,8 @@ Log.raw(
     " #" + "-".repeat(pad) + "#\n",
 );
 
-Log.info("--- START ---");
-Log.info(appname + " v" + version + " by " + author);
+Log.info("--- START ---", true);
+Log.info(appname + " v" + version + " by " + author, true);
 
 Log.debug("Node Environment: " + process.env.NODE_ENV, true);
 Log.debug("NodeJS version: " + process.version, true);
@@ -48,6 +48,6 @@ else {
     process.exit(1);
 }
 
-manager.on("clusterCreate", shard => Log.info(`Launched shard ${shard.id}`));
+manager.on("clusterCreate", shard => Log.info(`Launched shard ${shard.id}`, true));
 
 manager.spawn({ timeout: -1 });

@@ -13,12 +13,9 @@ export default {
             tr: "Bot hakkında bilgileri gösterir.",
         },
     },
-    admin_help: {
-        desc: "Show an overview of all admin commands.",
-        translations: {
-            de: "Zeig eine Übersicht aller Admin-Befehle.",
-            tr: "Bütün admin komutlarını listeler.",
-        },
+    avatar: {
+        desc: "Show the user avatar.",
+        translations: {}
     },
     set_language: {
         desc: "Set the server language for the bot.",

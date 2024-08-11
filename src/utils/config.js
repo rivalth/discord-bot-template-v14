@@ -45,6 +45,6 @@ export const meta = {
 export const config = {
     ...deepMerge(
         configBase,
-        /** @type {Partial<typeof configBase>} */ (configCustom),
+        configCustom,
     ),
 };

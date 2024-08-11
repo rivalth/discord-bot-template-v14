@@ -1,5 +1,7 @@
 import { ClusterClient, getInfo } from "discord-hybrid-sharding";
 import { GatewayIntentBits, Events, ActivityType, Partials } from "discord.js";
+import mongoose from 'mongoose';
+
 import Log from "./utils/log.js";
 import { config } from "./utils/config.js";
 import DiscordClient from "./utils/client/index.js";
@@ -31,37 +33,47 @@ const client = new DiscordClient({
 
 Log.wait("Starting bot...");
 
+global.config = config;
+
 client.cluster = new ClusterClient(client);
 
 client.on(Events.ClientReady, async() => {
-    Log.done("Client is ready!");
+    Log.done("Shard is ready!", true);
 
-    const guildCount = await client.guilds.fetch().then(guilds => guilds.size);
-    Log.info("Logged in as '" + client.user?.tag + "'! Serving in " + guildCount + " servers.");
+    Log.wait("Trying to connect mongoose database server...");
 
-    await registerCommands(client)
-        .then(() => client.on(Events.InteractionCreate, async interaction => interactionCreateHandler(interaction)));
-
-    await scheduleCrons(client);
-
-    client.user?.setActivity({ name: `Watching ${guildCount} servers!`, type: ActivityType.Playing });
-
-    // Reload guild count every 5 minutes if it changed
-    let lastGuildCount = guildCount;
-    setInterval(async() => {
-        const newGuildCount = await client.guilds.fetch().then(guilds => guilds.size);
-        const statusHasReset = client.user?.presence.activities[0].name === "Starting...";
-
-        if (newGuildCount !== lastGuildCount || statusHasReset){
-            lastGuildCount = newGuildCount;
-            client.user?.setActivity({ name: `Watching ${newGuildCount} servers!`, type: ActivityType.Playing });
-            Log.info("Guild count changed to " + newGuildCount + ". Updated activity.");
-
-            if (statusHasReset) Log.warn("Shard probably died. Re-Setting status without posting stats.");
-        }
-    }, 5 * 60 * 1000);
-
-    client.user?.setStatus("online");
+    mongoose.connect(process.env.MONGO_URL).then(async () => {
+        Log.done("Successfully connected to the mongoose database server.")
+        const guildCount = await client.guilds.fetch().then(guilds => guilds.size);
+        Log.info("Logged in as '" + client.user?.tag + "'! Serving in " + guildCount + " servers.");
+    
+        await registerCommands(client)
+            .then(() => client.on(Events.InteractionCreate, async interaction => interactionCreateHandler(interaction)));
+    
+        await scheduleCrons(client);
+    
+        client.user?.setActivity({ name: `Watching ${guildCount} servers!`, type: ActivityType.Playing });
+    
+        // Reload guild count every 5 minutes if it changed
+        let lastGuildCount = guildCount;
+        setInterval(async() => {
+            const newGuildCount = await client.guilds.fetch().then(guilds => guilds.size);
+            const statusHasReset = client.user?.presence.activities[0].name === "Starting...";
+    
+            if (newGuildCount !== lastGuildCount || statusHasReset){
+                lastGuildCount = newGuildCount;
+                client.user?.setActivity({ name: `Watching ${newGuildCount} servers!`, type: ActivityType.Playing });
+                Log.info("Guild count changed to " + newGuildCount + ". Updated activity.");
+    
+                if (statusHasReset) Log.warn("Shard probably died. Re-Setting status without posting stats.");
+            }
+        }, 5 * 60 * 1000);
+    
+        client.user?.setStatus("online");
+    })
+    .catch((err) => {
+        Log.error("Mongoose connection error: ", err)
+    })
 });
 
 client.on(Events.MessageCreate, async message => messageCreate(message));

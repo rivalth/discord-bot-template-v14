@@ -5,6 +5,8 @@
         "command_not_found": "'%s' komutunu bilmiyor gibi görünüyorum :/"
     },
     "replies": {
-        "bot_info_tagline": "Rivalth tarafından hazırlanmış Discord Bot şablonu."
+        "info": {
+            "tagLine": "Rivalth tarafından hazırlanmış Discord Bot şablonu."
+        }
     }
 }

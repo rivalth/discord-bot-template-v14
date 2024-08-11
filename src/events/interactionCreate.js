@@ -1,3 +1,4 @@
+import CommandStats from "../models/Stats.js";
 import Log from "../utils/log.js";
 import __ from "../utils/translation/i18n.js";
 
@@ -11,7 +12,10 @@ const handleCommandInteraction = async function(interaction){
     }
 
     try {
-        // await statDb.add(interaction.commandName, 1);
+        let stats = await CommandStats.findOne({ name: interaction.commandName });
+        if(stats) stats.value = (stats.value ?? 0) + 1;
+        else stats = new CommandStats({ name: interaction.commandName, value: 1 });
+        await stats.save();
         await command.execute(interaction);
     } catch (error) {
         Log.error("Error during command execution: ", error);

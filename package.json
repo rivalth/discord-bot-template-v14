@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Discord Bot Template by Rivalth",
   "main": "src/app.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,5 +21,13 @@
   "bugs": {
     "url": "https://github.com/rivalth/discord-bot-template-v14/issues"
   },
-  "homepage": "https://github.com/rivalth/discord-bot-template-v14#readme"
+  "homepage": "https://github.com/rivalth/discord-bot-template-v14#readme",
+  "dependencies": {
+    "discord-hybrid-sharding": "^2.2.0",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "i18n-light": "^0.5.4",
+    "mongoose": "^8.5.2",
+    "node-cron": "^3.0.3"
+  }
 }

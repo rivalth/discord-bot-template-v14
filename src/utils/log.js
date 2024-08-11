@@ -83,10 +83,13 @@ class Log {
      * @param {string} str
      * @param {string} log
      * @param {boolean} [error=false]
+     * @param {boolean} [_console=false]
      * @memberof Log
      */
-    static #logger(str, log, error = false){
-        console.log(str);
+    static #logger(str, log, error = false, _console = false){
+        if(_console) {
+            console.log(str);
+        }
         this.#ensureDirs();
         this.#logTofile(log, error);
     }
@@ -101,10 +104,10 @@ class Log {
      */
     static error(input, trace){
         const log = "[ERROR] " + this.#getDate() + " - " + input;
-        this.#logger(" \x1b[41m\x1b[315m x \x1b[0m\x1b[31m " + log + "\x1b[0m", log, true);
+        this.#logger(" \x1b[41m\x1b[315m x \x1b[0m\x1b[31m " + log + "\x1b[0m", log, true, true);
         if (trace && trace.stack){
             const eLog = "[TRACE] " + this.#getDate() + " - " + trace.stack;
-            this.#logger(" \x1b[41m\x1b[315m x \x1b[0m\x1b[31m " + eLog + "\x1b[0m", eLog, true);
+            this.#logger(" \x1b[41m\x1b[315m x \x1b[0m\x1b[31m " + eLog + "\x1b[0m", eLog, true, true);
         }
     }
 
@@ -113,11 +116,12 @@ class Log {
      *
      * @static
      * @param {string} input
+     * @param {boolean} console
      * @memberof Log
      */
-    static warn(input){
+    static warn(input, console){
         const log = "[WARN]  " + this.#getDate() + " - " + input;
-        this.#logger(" \x1b[43m\x1b[30m ! \x1b[0m\x1b[33m " + log + "\x1b[0m", log);
+        this.#logger(" \x1b[43m\x1b[30m ! \x1b[0m\x1b[33m " + log + "\x1b[0m", log, false, console);
     }
 
     /**
@@ -132,7 +136,7 @@ class Log {
     static debug(input, force = false){
         if (process.env.NODE_ENV !== "development" && !force) return;
         const log = "[DEBUG] " + this.#getDate() + " - " + input;
-        this.#logger(" \x1b[45m\x1b[30m d \x1b[0m\x1b[35m " + log + "\x1b[0m", log);
+        this.#logger(" \x1b[45m\x1b[30m d \x1b[0m\x1b[35m " + log + "\x1b[0m", log, false, true);
     }
 
     /**
@@ -140,11 +144,12 @@ class Log {
      *
      * @static
      * @param {string} input
+     * @param {boolean} console
      * @memberof Log
      */
-    static wait(input){
+    static wait(input, console){
         const log = "[WAIT]  " + this.#getDate() + " - " + input;
-        this.#logger(" \x1b[46m\x1b[30m ⧖ \x1b[0m\x1b[36m " + log + "\x1b[0m", log);
+        this.#logger(" \x1b[46m\x1b[30m ⧖ \x1b[0m\x1b[36m " + log + "\x1b[0m", log, false, console);
     }
 
     /**
@@ -152,11 +157,12 @@ class Log {
      *
      * @static
      * @param {string} input
+     * @param {boolean} console
      * @memberof Log
      */
-    static info(input){
+    static info(input, console){
         const log = "[INFO]  " + this.#getDate() + " - " + input;
-        this.#logger(" \x1b[44m\x1b[30m i \x1b[0m\x1b[36m " + log + "\x1b[0m", log);
+        this.#logger(" \x1b[44m\x1b[30m i \x1b[0m\x1b[36m " + log + "\x1b[0m", log, false, console);
     }
 
     /**
@@ -164,11 +170,12 @@ class Log {
      *
      * @static
      * @param {string} input
+     * @param {boolean} console
      * @memberof Log
      */
-    static done(input){
+    static done(input, console){
         const log = "[DONE]  " + this.#getDate() + " - " + input;
-        this.#logger(" \x1b[42m\x1b[30m ✓ \x1b[0m\x1b[32m " + log + "\x1b[0m", log);
+        this.#logger(" \x1b[42m\x1b[30m ✓ \x1b[0m\x1b[32m " + log + "\x1b[0m", log, false, console);
     }
 
     /**

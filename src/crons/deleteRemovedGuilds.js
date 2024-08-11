@@ -1,15 +1,15 @@
+import GuildModel from "../models/Guild.js";
+import UserModel from "../models/Users.js";
 import Log from "../utils/log.js";
 
 const iterator = async function(dbObj, dbname, client){
     let counter = 0;
     for (const guild of dbObj){
-        const guildId = guild.id.replace("guild-", "");
-        const discordGuild = await client.guilds.fetch(guildId).catch(() => null);
+        const discordGuild = await client.guilds.fetch(guild.id).catch(() => null);
 
         if (!discordGuild){
-            Log.warn(`[CRON] Removing guild ${guildId} from DB...`);
-            if (dbname === "guild") await guildDb.delete(guild.id);
-            if (dbname === "user") await userDb.delete(guild.id);
+            Log.warn(`[CRON] Removing guild ${guild.name}(${guild.id}) from DB...`);
+            await GuildModel.findOneAndDelete({ id: guild.id });
             ++counter;
             continue;    
         }
@@ -19,13 +19,9 @@ const iterator = async function(dbObj, dbname, client){
 
 const deleteRemovedGuilds = async(client) => {
     Log.wait("[CRON] Removing non-existant guilds from DB...");
+    const removed2 = await iterator(await GuildModel.find().select('id name').lean(), "guild", client);
 
-    const removed1 = await iterator(await userDb.all(), "user", client);
-    const removed2 = await iterator(await guildDb.all(), "guild", client);
-
-    if (removed1 !== removed2) Log.warn("[CRON] Db Mismatch! Removed " + removed1 + " from user DB and " + removed2 + " from guild DB.");
-
-    Log.done(`[CRON] Cleaned up DB. Removed ${removed1} guilds.`);
+    Log.done(`[CRON] Cleaned up DB. Removed ${removed2} guilds.`);
 };
 
 export default deleteRemovedGuilds;

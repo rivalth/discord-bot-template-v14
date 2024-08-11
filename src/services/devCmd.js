@@ -1,6 +1,7 @@
 import path from "node:path";
 import { config } from "../utils/config.js";
 import Log from "../utils/log.js";
+import CommandStats from "../models/Stats.js";
 
 // Dev-only debug stuff
 
@@ -11,8 +12,8 @@ const devCmd = async function(message){
 
     if (cont.toLowerCase().startsWith(".cmdstats")){
         try {
-            const s = (await db.all()).sort((a, b) => b.value - a.value);
-            const m = s.map(({ id, value }) => `${id}: ${value}`).join("\n");
+            const s = await CommandStats.find().lean().sort({ value: -1 });
+            const m = s.map(({ name, value }) => `${name}: ${value}`).join("\n");
             if (!m){
                 await message.channel.send("No stats available.");
                 return;
